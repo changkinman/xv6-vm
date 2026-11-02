@@ -17,7 +17,11 @@
 #define ANSI_YELLOW ""
 #endif
 
+// QEMU virt exposes the RISC-V time counter at 10 MHz.
+#define TIME_TICKS_PER_MSEC 10000ULL
+
 extern char end[];
+extern uint64 boot_start_time;
 
 volatile static int started = 0;
 
@@ -68,6 +72,11 @@ main()
     fileinit();      // file table
     virtio_disk_init(); // emulated hard disk
     userinit();      // first user process
+    uint64 boot_end_time = r_time();
+    uint boot_elapsed_ms = (uint)((boot_end_time - boot_start_time) /
+                                  TIME_TICKS_PER_MSEC);
+    printf(ANSI_GREEN " Boot time       : %d ms\n" ANSI_RESET,
+           boot_elapsed_ms);
     __sync_synchronize();
     started = 1;
   } else {

@@ -15,10 +15,16 @@ uint64 timer_scratch[NCPU][5];
 // assembly code in kernelvec.S for machine-mode timer interrupt.
 extern void timervec();
 
+// Time when CPU 0 starts the C portion of kernel boot.
+uint64 boot_start_time;
+
 // entry.S jumps here in machine mode on stack0.
 void
 start()
 {
+  if(r_mhartid() == 0)
+    boot_start_time = r_time();
+
   // set M Previous Privilege mode to Supervisor, for mret.
   unsigned long x = r_mstatus();
   x &= ~MSTATUS_MPP_MASK;
