@@ -21,7 +21,6 @@
 #define TIME_TICKS_PER_MSEC 10000ULL
 
 extern char end[];
-extern uint64 boot_start_time;
 
 volatile static int started = 0;
 
@@ -30,6 +29,7 @@ void
 main()
 {
   if(cpuid() == 0){
+    uint64 boot_start_time = r_time();
     uint memory_mb = (uint)((PHYSTOP - KERNBASE) / (1024 * 1024));
     uint kernel_kb = (uint)(((uint64)end - KERNBASE) / 1024);
     consoleinit();
