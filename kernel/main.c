@@ -17,19 +17,25 @@
 #define ANSI_YELLOW ""
 #endif
 
-// QEMU virt exposes the RISC-V time counter at 10 MHz.
+// QEMU virt's CLINT timer advances at 10 MHz.
 #define TIME_TICKS_PER_MSEC 10000ULL
 
 extern char end[];
 
 volatile static int started = 0;
 
+static uint64
+boot_time_ticks(void)
+{
+  return *(volatile uint64*)CLINT_MTIME;
+}
+
 // start() jumps here in supervisor mode on all CPUs.
 void
 main()
 {
   if(cpuid() == 0){
-    uint64 boot_start_time = r_time();
+    uint64 boot_start_time = boot_time_ticks();
     uint memory_mb = (uint)((PHYSTOP - KERNBASE) / (1024 * 1024));
     uint kernel_kb = (uint)(((uint64)end - KERNBASE) / 1024);
     consoleinit();
@@ -72,7 +78,7 @@ main()
     fileinit();      // file table
     virtio_disk_init(); // emulated hard disk
     userinit();      // first user process
-    uint64 boot_end_time = r_time();
+    uint64 boot_end_time = boot_time_ticks();
     uint boot_elapsed_ms = (uint)((boot_end_time - boot_start_time) /
                                   TIME_TICKS_PER_MSEC);
     printf(ANSI_GREEN " Boot time       : %d ms\n" ANSI_RESET,
