@@ -9,6 +9,11 @@ struct procinfo {
   char name[16];
 };
 
+struct systime {
+  uint ticks;
+  uint uptime;
+};
+
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -32,6 +37,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 int getprocinfo(struct procinfo *);
+int getsystime(struct systime *);
 
 // ulib.c
 int stat(const char*, struct stat*);

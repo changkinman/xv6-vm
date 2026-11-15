@@ -42,6 +42,22 @@ sys_getprocinfo(void)
 }
 
 uint64
+sys_getsystime(void)
+{
+  struct systime *time;
+
+  if(argaddr(0, (uint64 *)&time) < 0)
+    return -1;
+
+  acquire(&tickslock);
+  time->ticks = ticks;
+  time->uptime = ticks / 100;
+  release(&tickslock);
+
+  return 0;
+}
+
+uint64
 sys_fork(void)
 {
   return fork();

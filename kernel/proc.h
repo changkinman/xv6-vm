@@ -90,6 +90,11 @@ struct procinfo {
   char name[16];
 };
 
+struct systime {
+  uint ticks;
+  uint uptime;
+};
+
 // Per-process state
 struct proc {
   struct spinlock lock;
