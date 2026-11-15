@@ -1,6 +1,14 @@
 struct stat;
 struct rtcdate;
 
+struct procinfo {
+  int pid;
+  int ppid;
+  int state;
+  uint sz;
+  char name[16];
+};
+
 // system calls
 int fork(void);
 int exit(int) __attribute__((noreturn));
@@ -23,6 +31,7 @@ int getpid(void);
 char* sbrk(int);
 int sleep(int);
 int uptime(void);
+int getprocinfo(struct procinfo *);
 
 // ulib.c
 int stat(const char*, struct stat*);
