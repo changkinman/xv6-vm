@@ -7,8 +7,6 @@
 #include "spinlock.h"
 #include "proc.h"
 
-extern struct spinlock wait_lock;
-
 uint64
 sys_exit(void)
 {
@@ -28,25 +26,17 @@ sys_getpid(void)
 uint64
 sys_getprocinfo(void)
 {
-  uint64 uaddr;
-  struct procinfo info;
+  struct procinfo *info;
   struct proc *p = myproc();
 
-  if(argaddr(0, &uaddr) < 0)
+  if(argaddr(0, (uint64 *)&info) < 0)
     return -1;
 
-  acquire(&wait_lock);
-  acquire(&p->lock);
-  info.pid = p->pid;
-  info.ppid = p->parent ? p->parent->pid : 0;
-  info.state = p->state;
-  info.sz = p->sz;
-  safestrcpy(info.name, p->name, sizeof(info.name));
-  release(&p->lock);
-  release(&wait_lock);
-
-  if(copyout(p->pagetable, uaddr, (char *)&info, sizeof(info)) < 0)
-    return -1;
+  info->pid = p->pid;
+  info->ppid = p->parent ? p->parent->pid : 0;
+  info->state = p->state;
+  info->sz = p->sz;
+  safestrcpy(info->name, p->name, sizeof(info->name));
 
   return 0;
 }
