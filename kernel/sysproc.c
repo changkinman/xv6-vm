@@ -28,17 +28,21 @@ sys_getpid(void)
 uint64
 sys_getprocinfo(void)
 {
-  struct procinfo *info;
+  uint64 uaddr;
+  struct procinfo info;
   struct proc *p = myproc();
 
-  if(argaddr(0, (uint64 *)&info) < 0)
+  if(argaddr(0, &uaddr) < 0)
     return -1;
 
-  info->pid = p->pid;
-  info->ppid = p->parent ? p->parent->pid : 0;
-  info->state = p->state;
-  info->sz = p->sz;
-  safestrcpy(info->name, p->name, sizeof(info->name));
+  info.pid = p->pid;
+  info.ppid = p->parent ? p->parent->pid : 0;
+  info.state = p->state;
+  info.sz = p->sz;
+  safestrcpy(info.name, p->name, sizeof(info.name));
+
+  if(copyout(p->pagetable, uaddr, (char *)&info, sizeof(info)) < 0)
+    return -1;
 
   return 0;
 }
@@ -46,15 +50,19 @@ sys_getprocinfo(void)
 uint64
 sys_getsystime(void)
 {
-  struct systime *time;
+  uint64 uaddr;
+  struct systime time;
 
-  if(argaddr(0, (uint64 *)&time) < 0)
+  if(argaddr(0, &uaddr) < 0)
     return -1;
 
   acquire(&tickslock);
-  time->ticks = ticks;
-  time->uptime = ticks / 100;
+  time.ticks = ticks;
+  time.uptime = ticks / 100;
   release(&tickslock);
+
+  if(copyout(myproc()->pagetable, uaddr, (char *)&time, sizeof(time)) < 0)
+    return -1;
 
   return 0;
 }
