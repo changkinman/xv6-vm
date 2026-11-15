@@ -38,3 +38,4 @@ entry("sleep");
 entry("uptime");
 entry("getprocinfo");
 entry("getsystime");
+entry("setpriority");

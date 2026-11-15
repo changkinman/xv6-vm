@@ -7,6 +7,8 @@
 #include "spinlock.h"
 #include "proc.h"
 
+extern struct proc proc[NPROC];
+
 uint64
 sys_exit(void)
 {
@@ -55,6 +57,31 @@ sys_getsystime(void)
   release(&tickslock);
 
   return 0;
+}
+
+uint64
+sys_setpriority(void)
+{
+  int pid, priority;
+  struct proc *p;
+
+  if(argint(0, &pid) < 0 || argint(1, &priority) < 0)
+    return -1;
+
+  if(priority < 0 || priority > 10)
+    return -1;
+
+  for(p = proc; p < &proc[NPROC]; p++) {
+    acquire(&p->lock);
+    if(p->pid == pid) {
+      p->priority = priority;
+      release(&p->lock);
+      return 0;
+    }
+    release(&p->lock);
+  }
+
+  return -1;
 }
 
 uint64

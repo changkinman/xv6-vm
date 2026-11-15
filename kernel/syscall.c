@@ -102,6 +102,7 @@ extern uint64 sys_pipe(void);
 extern uint64 sys_read(void);
 extern uint64 sys_sbrk(void);
 extern uint64 sys_sleep(void);
+extern uint64 sys_setpriority(void);
 extern uint64 sys_unlink(void);
 extern uint64 sys_wait(void);
 extern uint64 sys_write(void);
@@ -123,6 +124,7 @@ static uint64 (*syscalls[])(void) = {
 [SYS_getsystime] sys_getsystime,
 [SYS_sbrk]    sys_sbrk,
 [SYS_sleep]   sys_sleep,
+[SYS_setpriority] sys_setpriority,
 [SYS_uptime]  sys_uptime,
 [SYS_open]    sys_open,
 [SYS_write]   sys_write,

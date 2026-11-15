@@ -38,6 +38,7 @@ int sleep(int);
 int uptime(void);
 int getprocinfo(struct procinfo *);
 int getsystime(struct systime *);
+int setpriority(int, int);
 
 // ulib.c
 int stat(const char*, struct stat*);
