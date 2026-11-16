@@ -167,6 +167,11 @@ $U/_forktest: $U/forktest.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $U/_forktest $U/forktest.o $U/ulib.o $U/usys.o
 	$(OBJDUMP) -S $U/_forktest > $U/forktest.asm
 
+$U/_performance_test: $U/performance_test.o $U/priority_policy.o \
+	$U/round_robin_policy.o $U/multilevel_queue_policy.o $(ULIB)
+	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
+	$(OBJDUMP) -S $@ > $U/performance_test.asm
+
 mkfs/mkfs: mkfs/mkfs.c $K/fs.h $K/param.h
 	gcc $(XCFLAGS) -Werror -Wall -I. -o mkfs/mkfs mkfs/mkfs.c
 
@@ -195,6 +200,7 @@ UPROGS=\
 	$U/_zombie\
 	$U/_hello\
 	$U/_test_syscalls\
+	$U/_performance_test\
 
 
 
