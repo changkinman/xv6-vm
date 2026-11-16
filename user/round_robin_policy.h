@@ -1,17 +1,19 @@
+#ifndef MAX_PROCESSES
+#define MAX_PROCESSES 64
+#endif
+
+typedef struct Process Process;
+
 typedef struct {
-  int *queue;
-  int capacity;
+  Process *queue[MAX_PROCESSES];
   int front;
   int rear;
-  int count;
   int time_quantum;
 } RoundRobinQueue;
 
-int rr_queue_init(RoundRobinQueue *rq, int storage[], int capacity,
-                  int time_quantum);
+void rr_queue_init(RoundRobinQueue *rq, int time_quantum);
 int rr_queue_empty(const RoundRobinQueue *rq);
 int rr_queue_full(const RoundRobinQueue *rq);
-int rr_enqueue(RoundRobinQueue *rq, int pid);
-int rr_dequeue(RoundRobinQueue *rq);
-int rr_dispatch_next(RoundRobinQueue *rq);
-int rr_requeue_after_quantum(RoundRobinQueue *rq, int pid, int still_ready);
+int rr_enqueue(RoundRobinQueue *rq, Process *p);
+Process *rr_dequeue(RoundRobinQueue *rq);
+void round_robin_schedule(Process processes[], int n, int quantum);
