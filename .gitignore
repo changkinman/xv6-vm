@@ -20,5 +20,11 @@ myapi.key
 xv6.out*
 .vagrant/
 submissions/
+/docs/
 ph
 barrier
+.report_deps/
+report_qa/
+__pycache__/
+*.py[cod]
+create_lab3_report.py
