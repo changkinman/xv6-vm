@@ -20,6 +20,9 @@ int rr_queue_full(const RoundRobinQueue *rq);
 int rr_enqueue(RoundRobinQueue *rq, Process *p);
 Process *rr_dequeue(RoundRobinQueue *rq);
 int rr_remove(RoundRobinQueue *rq, Process *p);
-void round_robin_schedule(Process processes[], int n, int quantum);
+// A parameter declared as Process processes[] is adjusted by C to Process *.
+// The pointer spelling is required here because Process is completed only by
+// the task 7 performance-test program after this header is included.
+void round_robin_schedule(Process *processes, int n, int quantum);
 
 #endif
