@@ -1,3 +1,6 @@
+#ifndef PRIORITY_POLICY_H
+#define PRIORITY_POLICY_H
+
 #define PRIORITY_MIN 0
 #define PRIORITY_MAX 31
 #define PRIORITY_DEFAULT 15
@@ -21,3 +24,5 @@ int priority_select_next(const PrioritySlot slots[], int count);
 int priority_should_preempt(const PrioritySlot *current,
                             const PrioritySlot *candidate);
 void priority_record_dispatch(PrioritySlot *slot);
+
+#endif

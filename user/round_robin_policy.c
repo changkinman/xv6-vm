@@ -44,3 +44,29 @@ rr_dequeue(RoundRobinQueue *rq)
   return p;
 }
 
+int
+rr_remove(RoundRobinQueue *rq, Process *p)
+{
+  int read = rq->front;
+  int write = rq->front;
+  int removed = 0;
+
+  while(read != rq->rear) {
+    Process *current = rq->queue[read];
+
+    if(!removed && current == p) {
+      removed = 1;
+    } else {
+      rq->queue[write] = current;
+      write = (write + 1) % MAX_PROCESSES;
+    }
+    read = (read + 1) % MAX_PROCESSES;
+  }
+
+  if(!removed)
+    return -1;
+
+  rq->rear = write;
+  return 0;
+}
+
