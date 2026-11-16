@@ -93,11 +93,6 @@ OBJDUMP = $(TOOLPREFIX)objdump
 
 CFLAGS = -Wall -Werror -O -fno-omit-frame-pointer -ggdb
 
-# Select the user-space scheduling simulation at build time. Task 4 implements
-# SCHED_PRIORITY; later tasks will add SCHED_RR and SCHED_MLFQ.
-SCHED_POLICY ?= SCHED_PRIORITY
-CFLAGS += -DSCHED_POLICY=$(SCHED_POLICY)
-
 ifdef LAB
 LABUPPER = $(shell echo $(LAB) | tr a-z A-Z)
 XCFLAGS += -DSOL_$(LABUPPER) -DLAB_$(LABUPPER)
@@ -200,7 +195,6 @@ UPROGS=\
 	$U/_zombie\
 	$U/_hello\
 	$U/_test_syscalls\
-	$U/_schedsim\
 
 
 
